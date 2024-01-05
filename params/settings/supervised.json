@@ -1,0 +1,327 @@
+{
+    "dataset_params": {
+        "dataset": "JUMP_TARGET",
+        "test_subset": "test_orf",
+        "split_setting": "single_MICROSCOPE_specific",
+        "split_setting_source": "source_3",
+        "cross_batch": false,
+        "root_dir": "/root/dir/",
+        "data_location": "/data/location/",
+        "train_transforms": {
+            "Resize": {
+                "apply": false,
+                "height": 256,
+                "width": 256
+            },
+            "CenterCrop": {
+                "apply": true,
+                "height": 448,
+                "width": 448
+            },
+            "Normalize": false,
+            "VerticalFlip": {
+                "apply": true,
+                "p": 0.5
+            },
+            "HorizontalFlip": {
+                "apply": true,
+                "p": 0.5
+            },
+            "RandomRotation": {
+                "apply": false,
+                "angle": 5,
+                "p": 0.5
+            },
+            "RandomGrayscale": {
+                "apply": false,
+                "p": 0.2
+            },
+            "RandomCrop": {
+                "apply": true,
+                "height": 224,
+                "width": 224,
+                "padding": 0,
+                "p": 1.0
+            },
+            "ColorJitter": {
+                "apply": false,
+                "brightness": 0.8,
+                "contrast": 0.8,
+                "saturation": 0.8,
+                "hue": 0.2,
+                "p": 0.8
+            },
+            "RandomPerspective": {
+                "apply": false,
+                "distortion_scale": 0.2,
+                "p": 0.5
+            },
+            "RandomAffine": {
+                "apply": false,
+                "degrees": 5,
+                "translate": [
+                    0.1,
+                    0.3
+                ],
+                "scale": [
+                    0.1,
+                    3.3
+                ],
+                "shear": 0.2,
+                "p": 0.5
+            },
+            "RandomErasing": {
+                "apply": false,
+                "scale": [
+                    0.02,
+                    0.33
+                ],
+                "ratio": [
+                    0.3,
+                    3.3
+                ],
+                "value": 0,
+                "p": 0.5
+            },
+            "RandomGaussianBlur": {
+                "apply": false,
+                "radius_min": 0.1,
+                "radius_max": 2.0,
+                "p": 0.2
+            },
+            "RandomIntensityBrightness": {
+                "apply": true,
+                "intensity": 0.005,
+                "brightness": 0.005,
+                "p": 0.5
+            },
+            "RandomSolarize": {
+                "apply": false,
+                "threshold": 128,
+                "p": 0.2
+            },
+            "RandomResizedCrop": {
+                "apply": false,
+                "size": 224,
+                "scale": [
+                    0.8,
+                    1.2
+                ]
+            },
+            "MultiCrop": {
+                "apply": false,
+                "n_crops": [
+                    2,
+                    6
+                ],
+                "sizes": [
+                    224,
+                    96
+                ],
+                "scales": [
+                    [
+                        0.4,
+                        1.0
+                    ],
+                    [
+                        0.05,
+                        0.4
+                    ]
+                ]
+            },
+            "SelfNormalize": true
+        },
+        "val_transforms": {
+            "Resize": {
+                "apply": false,
+                "height": 256,
+                "width": 256
+            },
+            "CenterCrop": {
+                "apply": true,
+                "height": 224,
+                "width": 224
+            },
+            "Normalize": false,
+            "SelfNormalize": true
+        },
+        "test_transforms": {
+            "Resize": {
+                "apply": false,
+                "height": 256,
+                "width": 256
+            },
+            "CenterCrop": {
+                "apply": true,
+                "height": 224,
+                "width": 224
+            },
+            "Normalize": false,
+            "SelfNormalize": true
+        },
+        "aug_strat_path": "-"
+    },
+    "dataloader_params": {
+        "trainloader": {
+            "batch_size": 128,
+            "num_workers": 8,
+            "prefetch_factor": 4,
+            "shuffle": true,
+            "pin_memory": true,
+            "drop_last": true,
+            "persistent_workers": true
+        },
+        "valloader": {
+            "batch_size": 128,
+            "num_workers": 8,
+            "prefetch_factor": 4,
+            "shuffle": true,
+            "pin_memory": true,
+            "drop_last": true,
+            "persistent_workers": true
+        },
+        "testloader": {
+            "batch_size": 128,
+            "num_workers": 8,
+            "prefetch_factor": 4,
+            "shuffle": false,
+            "pin_memory": true,
+            "drop_last": false,
+            "persistent_workers": false
+        }
+    },
+    "model_params": {
+        "backbone_type": "deit_small",
+        "cnn_params": {
+            "pretrained_type": "supervised"
+        },
+        "transformers_params": {
+            "img_size": [
+                224
+            ],
+            "patch_size": 16,
+            "pretrained_type": "supervised",
+            "is_memory_efficient": true
+        },
+        "pretrained": true,
+        "freeze_backbone": false,
+        "DINO": {
+            "projection_size": 4096,
+            "moving_average_decay": 0.996,
+            "warmup_teacher_temp_epochs": 30
+        },
+        "ODA": {
+            "foundation_params": {
+                "backbone_type": "deit_small",
+                "transformers_params": {
+                    "img_size": [
+                        224
+                    ],
+                    "patch_size": 16,
+                    "pretrained_type": "supervised",
+                    "is_memory_efficient": true
+                },
+                "pretrained": true,
+                "freeze_backbone": true,
+                "reset_norms": false,
+                "transfer_learning_params": {
+                    "use_pretrained": true,
+                    "pretrained_method": "dino",
+                    "pretrained_model_name": "-",
+                    "pretrained_path": ""
+                }
+            }
+        }
+    },
+    "optimization_params": {
+        "default": {
+            "optimizer": {
+                "type": "AdamW",
+                "autoscale_lr": false,
+                "params": {
+                    "lr": 0.0001,
+                    "weight_decay": 1e-05
+                }
+            },
+            "LARS_params": {
+                "use": false,
+                "batch_act_thresh": 256,
+                "eps": 1e-08,
+                "trust_coef": 0.001
+            },
+            "scheduler": {
+                "type": [
+                    "LinearWarmup"
+                ],
+                "params": {
+                    "ReduceLROnPlateau": {
+                        "mode": "max",
+                        "factor": 0.1,
+                        "patience": 2,
+                        "verbose": true
+                    },
+                    "OneCycleLR": {
+                        "anneal_strategy": "linear",
+                        "final_div_factor": 0.0001
+                    },
+                    "MultiStepLR": {
+                        "milestones": [
+                            14,
+                            20
+                        ],
+                        "gamma": 0.1
+                    },
+                    "CosineAnnealingLR": {
+                        "eta_min": 1e-06
+                    },
+                    "LinearWarmup": {
+                        "warmup_epochs": 3,
+                        "warmup_iters": 0
+                    }
+                }
+            }
+        }
+    },
+    "training_params": {
+        "model_name": "oda-ss-3-sl-1",
+        "epochs": 50,
+        "val_every": 2,
+        "log_every": 10,
+        "save_best_model": true,
+        "log_embeddings": false,
+        "knn_eval": true,
+        "grad_clipping": 1.0,
+        "restore_session": false,
+        "restore_only_model": false,
+        "use_tensorboard": false,
+        "use_mixed_precision": false,
+        "save_dir": "/data/location/checkpoints-oda-ss"
+    },
+    "system_params": {
+        "use_all_GPUs": false,
+        "which_GPUs": "0",
+        "use_GPU": true
+    },
+    "log_params": {
+        "project_name": "ODA-single-source-JUMP",
+        "run_name": "DEFINED_BY_MODEL_NAME"
+    },
+    "lr_finder": {
+        "type": "grid_search",
+        "grid_search_params": {
+            "min_pow": -5,
+            "max_pow": -2,
+            "resolution": 25,
+            "n_epochs": 5,
+            "random_lr": false,
+            "keep_schedule": false,
+            "report_intermediate_steps": false
+        }
+    },
+    "transfer_learning_params": {
+        "use_pretrained": false,
+        "pretrained_method": "oda",
+        "pretrained_model_name": "debug.oda",
+        "pretrained_path": ""
+    }
+}
